@@ -1,0 +1,8 @@
+api_url: "https://www.gov.uk/api/search.json"
+metadata_dir: "./data/metadata"
+no_docs_per_field: 100
+no_docs_batch: 20
+text_dir: "./data/text"
+doc_url_prefix: "https://www.gov.uk"
+cache_dir: "./data/cache"
+request_delay: 0.2

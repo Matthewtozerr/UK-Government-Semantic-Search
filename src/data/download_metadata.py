@@ -1,8 +1,13 @@
 import requests
 import json
 from pathlib import Path
+from src.data.config.config import main_config
 
-API_URL = "https://www.gov.uk/api/search.json"
+cfg = main_config()
+
+api_url = cfg["api_url"]
+output_dir = Path(cfg["metadata_dir"])
+output_dir.mkdir(parents=True, exist_ok=True)
 
 fields = [
     "energy",
@@ -41,11 +46,8 @@ formats = {
     "detailed_guide",
 }
 
-target = 100
-batch = 20
-
-OUTPUT_DIR = Path("./data/raw")
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+target = cfg["no_docs_per_field"]
+batch = cfg["no_docs_batch"]
 
 for field in fields:
     docs = []
@@ -60,7 +62,7 @@ for field in fields:
             "order": "-public_timestamp",
         }
 
-        response = requests.get(API_URL, params=params)
+        response = requests.get(api_url, params=params)
         response.raise_for_status()
 
         data = response.json()
@@ -94,7 +96,7 @@ for field in fields:
 
     docs = docs[:target]
 
-    with open(f"{OUTPUT_DIR}/{field}.json", "w") as f:
+    with open(f"{output_dir}/{field}.json", "w") as f:
         json.dump(docs, f, indent=4)
 
 
